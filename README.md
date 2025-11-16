@@ -1,3 +1,7 @@
+[![Crates.io](https://img.shields.io/crates/v/winaudit.svg)](https://crates.io/crates/winaudit)
+[![Docs.rs](https://docs.rs/winaudit/badge.svg)](https://docs.rs/winaudit)
+
+
 # Overview
 My winaudit crate provide Security Checks for Windows Systems this can be used for Building a Windows Auditor framework or Security Checks.
 # Usage Example
