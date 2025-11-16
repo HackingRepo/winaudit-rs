@@ -27,4 +27,4 @@ fn main() {
 ```
 
 # Contributions
-If you want to contribute fill free to open an issue or pull request on this repo [winaudit]https://github.com/HackingRepo/winaudit-rs
+If you want to contribute fill free to open an issue or pull request on this repo [winaudit](https://github.com/HackingRepo/winaudit-rs)
