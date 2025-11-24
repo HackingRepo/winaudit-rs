@@ -1,3 +1,9 @@
+//! This module offer experimental checks for Network Adapaters
+//!
+//! Note:
+//! You need enable feature "experimental" in Cargo.toml.
+//!
+
 use crate::WinAuditError;
 use crate::hardwarechecks::windows_defs::*;
 
@@ -8,6 +14,25 @@ use windows::core::PCWSTR;
 
 use std::ptr;
 
+/// Check is Network Adapter Device support **SRIOV**
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_sriov_enabled;
+///
+/// match is_sriov_enabled("\\\\.\\PhysicalNetAdapter") {
+///     Ok(enabled) => {
+///         if enabled {
+///             println!("SRIOV is enabled.");
+///         } else {
+///             println!("SRIOV is not enabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 #[allow(dead_code)]
 pub(crate) fn is_sriov_enabled(adapter_device_path: &str) -> Result<bool, WinAuditError> {
     unsafe {
