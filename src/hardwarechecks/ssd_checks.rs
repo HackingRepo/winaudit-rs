@@ -9,6 +9,29 @@ use windows::core::PCWSTR;
 use std::ptr;
 use widestring::U16CString;
 
+/// Check is current SSD support **SED** (Self Encrypted)
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_ssd_self_encrypted;
+///
+/// match is_ssd_self_encrypted("\\\\.\\PhysicalDrive0") {
+///     Ok(enabled) => {
+///         if enabled {
+///             println!("SSD support SED.");
+///         } else {
+///             println!("SSD does not support SED.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
+///
+/// Important Note:
+///
+/// This experimental because not guranteed to produce correct results.
 #[allow(dead_code)]
 pub(crate) fn is_ssd_self_encrypted(drive_path: &str) -> Result<bool, WinAuditError> {
     unsafe {
