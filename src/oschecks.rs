@@ -64,6 +64,11 @@ unsafe extern "system" {
     ) -> i32;
 }
 
+/// This struct represent windows version
+///
+/// # Fields:
+/// - *win_ver*: The windows version example 11, 10, 8.1
+/// - *build_number*: The windows build number example 22000
 pub struct WinVer {
     pub win_ver: f32,
     pub build_number: u16,
@@ -102,6 +107,21 @@ macro_rules! audit_try {
 }
 
 /// Get the current Windows version and build number
+///
+/// # Example Usage
+/// ```
+/// use winaudit::get_current_windows_version;
+///
+/// match get_current_windows_version() {
+///     Ok(version) => {
+///         println!("Current Windows version: {}", version.win_ver);
+///         println!("Current Windows build number: {}", version.build_number);
+///     }
+///     Err(error) => {
+///         eprintln!("Error: {}", error);
+///     }
+/// }
+/// ```
 pub fn get_current_windows_version() -> Result<WinVer, WinAuditError> {
     unsafe {
         let mut os_info: OSVERSIONINFOEXW = std::mem::zeroed();
@@ -124,6 +144,24 @@ pub fn get_current_windows_version() -> Result<WinVer, WinAuditError> {
 }
 
 /// Check is the Windows Version currently running is EOL, This important for Security
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_win_version_eol;
+///
+/// match is_win_version_eol() {
+///     Ok(is_eol) => {
+///         if is_eol {
+///             println!("The current Windows version is End-of-Life.");
+///         } else {
+///             println!("The current Windows version is not End-of-Life.");
+///         }
+///     }
+///   Err(error) => {
+///         eprintln!("Error: {}", error);
+///     }
+/// }
+/// ```
 pub fn is_win_version_eol() -> Result<bool, WinAuditError> {
     let current = get_current_windows_version()?;
 
@@ -137,11 +175,47 @@ pub fn is_win_version_eol() -> Result<bool, WinAuditError> {
 
 /// This check is the windows version safe and supported not EOL
 /// This counterpart of `is_win_version_eol`
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_win_version_safe;
+///
+/// match is_win_version_safe() {
+///     Ok(is_safe) => {
+///         if is_safe {
+///             println!("The current Windows version is safe and supported.");
+///         } else {
+///             println!("The current Windows version is not safe or not supported.");
+///         }
+///     }
+///    Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+///
 pub fn is_win_version_safe() -> Result<bool, WinAuditError> {
     Ok(!is_win_version_eol()?)
 }
 
-/// This check is ASLR enabled for the current process
+/// Check is ASLR (Address Space Layout Randomization) enabled for the current process.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_aslr_enabled_for_current_process;
+///
+/// match is_aslr_enabled_for_current_process() {
+///     Ok(is_enabled) => {
+///         if is_enabled {
+///             println!("ASLR is enabled for the current process.");
+///         } else {
+///             println!("ASLR is not enabled for the current process.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+///
 pub fn is_aslr_enabled_for_current_process() -> Result<bool, WinAuditError> {
     unsafe {
         let mut policy = PROCESS_MITIGATION_ASLR_POLICY::default();
@@ -172,7 +246,25 @@ pub fn is_aslr_enabled_for_current_process() -> Result<bool, WinAuditError> {
     }
 }
 
-/// Check is the ASLR enabled at system level
+/// Check is the ASLR (Address Space Layout Randomization) enabled at system level.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_aslr_enabled_for_system;
+///
+/// match is_aslr_enabled_for_system() {
+///     Ok(is_enabled) => {
+///         if is_enabled {
+///             println!("ASLR is enabled at system level.");
+///         } else {
+///             println!("ASLR is not enabled at system level.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_aslr_enabled_for_system() -> Result<bool, WinAuditError> {
     unsafe {
         let mut value: u32 = 0;
@@ -246,9 +338,30 @@ pub fn is_aslr_enabled_for_system() -> Result<bool, WinAuditError> {
     }
 }
 
-/// This check is only Administrator users exist in the system
+/// Check is only Administrator users exist in the system
 /// If only Administrator this is a security risk
+///
 /// Users encourged to create an normal user
+///
+/// # Example Usage:
+///
+/// ```
+/// use winaudit::is_only_administrator_user_exist;
+///
+/// match is_only_administrator_user_exist() {
+///     Ok(is_only_admin) => {
+///         if is_only_admin {
+///             println!("Only administrator user exists in the system.");
+///         } else {
+///             println!("More than one user exists in the system.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+///
+/// ```
 pub fn is_only_administrator_user_exist() -> Result<bool, WinAuditError> {
     unsafe {
         let mut buffer: *mut USER_INFO_0 = std::ptr::null_mut();
@@ -300,7 +413,26 @@ pub fn is_only_administrator_user_exist() -> Result<bool, WinAuditError> {
 
 /// This check is Windows Security Questions disabled
 /// This important to security!
+///
 /// Security Questions are unsafe for reset password, Because theses answers may already exist on Social Media or The Internet
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_security_questions_disabled;
+///
+/// match is_security_questions_disabled() {
+///     Ok(is_disabled) => {
+///         if is_disabled {
+///             println!("Security questions are disabled.");
+///         } else {
+///             println!("Security questions are not disabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_security_questions_disabled() -> Result<bool, WinAuditError> {
     unsafe {
         const CHECKS: &[(&str, &str)] = &[
@@ -385,7 +517,29 @@ pub fn is_security_questions_disabled() -> Result<bool, WinAuditError> {
     }
 }
 
-/// Check is bitlocker enabled or not
+/// Check is bitlocker enabled or not.
+///
+/// BitLocker is a software for Encrypting drives.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_bitlocker_enabled;
+///
+/// match is_bitlocker_enabled() {
+///     Ok(is_enabled) => {
+///         if is_enabled {
+///             println!("BitLocker is enabled.");
+///         } else {
+///             println!("BitLocker is not enabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
+///
+
 pub fn is_bitlocker_enabled() -> Result<bool, WinAuditError> {
     use windows::Win32::System::Registry::HKEY;
     unsafe {
@@ -446,6 +600,25 @@ pub fn is_bitlocker_enabled() -> Result<bool, WinAuditError> {
 }
 
 /// Check is a specific drive locked by BitLocker
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_drive_locked_with_bitlocker;
+///
+/// match is_drive_locked_with_bitlocker("C:") {
+///     Ok(is_locked) => {
+///         if is_locked {
+///             println!("The drive is locked by BitLocker.");
+///         } else {
+///             println!("The drive is not locked by BitLocker.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
+///
 pub fn is_drive_locked_with_bitlocker(drive_letter: &str) -> Result<bool, WinAuditError> {
     if !is_bitlocker_enabled()? {
         return Ok(false);
@@ -495,6 +668,29 @@ pub fn is_drive_locked_with_bitlocker(drive_letter: &str) -> Result<bool, WinAud
 }
 
 /// Check if the system drive is locked with BitLocker
+///
+/// This the same like `is_drive_locked_with_bitlocker("C:")`
+/// this designed for if windows not installed in `C:` drive.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_system_drive_locked_with_bitlocker;
+///
+/// match is_system_drive_locked_with_bitlocker() {
+///     Ok(is_locked) => {
+///         if is_locked {
+///             println!("The system drive is locked by BitLocker.");
+///         } else {
+///             println!("The system drive is not locked by BitLocker.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
+///
+
 pub fn is_system_drive_locked_with_bitlocker() -> Result<bool, WinAuditError> {
     unsafe {
         let mut buffer = [0u16; 260];
@@ -512,7 +708,25 @@ pub fn is_system_drive_locked_with_bitlocker() -> Result<bool, WinAuditError> {
 
 /// This check is SMBv1 enabled
 ///
-/// This critical for security! Because have dangerous exploit `EternalBlue`
+/// This critical for security! Because has dangerous exploit `EternalBlue`
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_smbv1_enabled;
+///
+/// match is_smbv1_enabled() {
+///     Ok(is_enabled) => {
+///         if is_enabled {
+///             println!("SMBv1 is enabled.");
+///         } else {
+///             println!("SMBv1 is not enabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_smbv1_enabled() -> Result<bool, WinAuditError> {
     use windows::Win32::System::Registry::HKEY;
     unsafe {
@@ -565,6 +779,26 @@ pub fn is_smbv1_enabled() -> Result<bool, WinAuditError> {
 
 /// Latest SMB version constant
 pub const LATEST_SMB_VERSION: f32 = 3.1;
+
+/// Check is the current SMB version is the latest
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_smb_version_latest;
+///
+/// match is_smb_version_latest() {
+///     Ok(is_latest) => {
+///         if is_latest {
+///             println!("The current SMB version is the latest.");
+///         } else {
+///             println!("The current SMB version is not the latest.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 
 pub fn is_smb_version_latest() -> Result<bool, WinAuditError> {
     use windows::Win32::System::Registry::HKEY;
@@ -637,7 +871,25 @@ pub fn is_smb_version_latest() -> Result<bool, WinAuditError> {
     }
 }
 
-/// Check is the SMB server allow anonymous login, No username or password
+/// Check is the SMB server allows anonymous login, No username or password
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_smb_server_allow_anonymous_login;
+///
+/// match is_smb_server_allow_anonymous_login() {
+///     Ok(is_allowed) => {
+///         if is_allowed {
+///             println!("The SMB server allows anonymous login.");
+///         } else {
+///             println!("The SMB server does not allow anonymous login.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_smb_server_allow_anonymous_login() -> Result<bool, WinAuditError> {
     unsafe {
         let hklm = HKEY_LOCAL_MACHINE;
@@ -721,7 +973,26 @@ pub fn is_smb_server_allow_anonymous_login() -> Result<bool, WinAuditError> {
 
 /// Check is Autorun/Autoplay enabled,
 ///
-/// This important to Security! malicious USBS can deploy malwares automatically and silently
+/// This important to Security!
+///  malicious USBS can deploy malwares automatically and silently without noticing.
+///
+/// # Example Usage
+/// ```
+/// use winaudit::is_autorun_enabled;
+///
+/// match is_autorun_enabled() {
+///     Ok(is_enabled) => {
+///         if is_enabled {
+///             println!("Autorun/Autoplay is enabled.");
+///         } else {
+///             println!("Autorun/Autoplay is not enabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_autorun_enabled() -> Result<bool, WinAuditError> {
     unsafe {
         let hives = [HKEY_LOCAL_MACHINE, HKEY_CURRENT_USER];
@@ -796,7 +1067,26 @@ struct DISK_QUOTA_INFORMATION {
 
 /// This check is quota enabled for specific Driver in current use scope.
 ///
-/// enabling Quota are critical for security, prevent malicious users to exhaust the disk
+/// enabling Quota are critical for security,
+/// prevent malicious users to exhaust disks.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_quota_enabled_for;
+///
+/// match is_quota_enabled_for("C:") {
+///     Ok(is_enabled) => {
+///         if is_enabled {
+///             println!("Quota is enabled for C: drive.");
+///         } else {
+///             println!("Quota is not enabled for C: drive.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_quota_enabled_for(drive_letter: &str) -> Result<bool, WinAuditError> {
     unsafe {
         let path_str = format!(r"\\.\{}", drive_letter.trim_end_matches(['\\', ':']));
@@ -864,7 +1154,25 @@ pub fn is_quota_enabled_for(drive_letter: &str) -> Result<bool, WinAuditError> {
 }
 
 /// Check if the system has an account lockout policy enabled.
-/// This important! for prevent brute force attacks against the target account
+/// This important! for prevent brute force attacks against the target accounts in the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_account_lockout_policy_enabled;
+///
+/// match is_account_lockout_policy_enabled() {
+///     Ok(is_enabled) => {
+///         if is_enabled {
+///             println!("Account lockout policy is enabled.");
+///         } else {
+///             println!("Account lockout policy is not enabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_account_lockout_policy_enabled() -> Result<bool, WinAuditError> {
     unsafe {
         let mut buffer: *mut core::ffi::c_void = std::ptr::null_mut();
@@ -900,7 +1208,25 @@ pub fn is_account_lockout_policy_enabled() -> Result<bool, WinAuditError> {
 const CLSID_UPDATE_SESSION: GUID = GUID::from_u128(0x4cb43d7f_7eee_4906_8698_60da1c38f2fe);
 
 /// Check is update available in Windows Update
-/// This important!, Updates includes bugs and vulnerability fixes
+/// This important!, Updates includes bugs and vulnerability fixes and patches.
+///
+/// # Example Usage:
+/// ```no_run
+/// use winaudit::is_update_available;
+///
+/// match is_update_available() {
+///     Ok(is_available) => {
+///         if is_available {
+///             println!("Update is available.");
+///         } else {
+///             println!("Update is not available.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_update_available() -> Result<bool, WinAuditError> {
     unsafe {
         hresult_to_audit_error(
@@ -954,7 +1280,25 @@ pub fn is_update_available() -> Result<bool, WinAuditError> {
 }
 
 /// Check is bluetooth enabled
-/// This improve security because Bluetooth vulnerable to huge of attacks like `BlueJacking` and other
+/// This improve security because Bluetooth vulnerable to huge of attacks like `BlueJacking` and other...
+///
+/// # Example Usage
+/// ```
+/// use winaudit::is_bluetooth_enabled;
+///
+/// match is_bluetooth_enabled() {
+///     Ok(is_enabled) => {
+///         if is_enabled {
+///             println!("Bluetooth is enabled.");
+///         } else {
+///             println!("Bluetooth is not enabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_bluetooth_enabled() -> Result<bool, WinAuditError> {
     unsafe {
         let mut params = BLUETOOTH_FIND_RADIO_PARAMS {
@@ -997,7 +1341,25 @@ pub fn is_bluetooth_enabled() -> Result<bool, WinAuditError> {
 
 /// Check is password policy is enforced
 ///
-/// This important for security! Because some accounts has weak passwords
+/// This important for security! Because some accounts in the system have weak passwords.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_strong_password_policy_enforced;
+///
+/// match is_strong_password_policy_enforced() {
+///     Ok(is_enforced) => {
+///         if is_enforced {
+///             println!("Password policy is enforced.");
+///         } else {
+///             println!("Password policy is not enforced.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_strong_password_policy_enforced() -> Result<bool, WinAuditError> {
     use windows::Win32::System::Registry::HKEY;
     unsafe {
@@ -1051,7 +1413,25 @@ pub fn is_strong_password_policy_enforced() -> Result<bool, WinAuditError> {
 
 /// Check is current Wi-Fi network encrypted
 ///
-/// This important for security! because public wifi are security risk
+/// This important for security! because public **Wi-Fis** are security risks.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_current_wifi_network_encrypted;
+///
+/// match is_current_wifi_network_encrypted() {
+///     Ok(is_encrypted) => {
+///         if is_encrypted {
+///             println!("Current Wi-Fi network is encrypted.");
+///         } else {
+///             println!("Current Wi-Fi network is not encrypted.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_current_wifi_network_encrypted() -> Result<bool, WinAuditError> {
     unsafe {
         let mut handle = HANDLE::default();
@@ -1106,7 +1486,25 @@ pub fn is_current_wifi_network_encrypted() -> Result<bool, WinAuditError> {
 
 /// Check is Empty passwords are disallowed
 ///
-/// This critical for security! Prevent users from creating account without passwords
+/// This critical for security! Prevent users from creating account with empty passwords.
+///
+/// # Example Usage
+/// ```
+/// use winaudit::is_empty_passwords_disallowed;
+///
+/// match is_empty_passwords_disallowed() {
+///     Ok(is_disallowed) => {
+///         if is_disallowed {
+///             println!("Empty passwords are disallowed.");
+///         } else {
+///             println!("Empty passwords are not disallowed.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_empty_passwords_disallowed() -> Result<bool, WinAuditError> {
     use windows::Win32::System::Registry::HKEY;
     unsafe {
@@ -1147,7 +1545,25 @@ pub fn is_empty_passwords_disallowed() -> Result<bool, WinAuditError> {
 
 /// Check is admin account Disabled
 ///
-/// This improve security and Reduce attack surface prevent brute force and login to it
+/// This improve security and Reduces attack surface preventing brute force attacks and login to the **Administrator** account.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_admin_account_disabled;
+///
+/// match is_admin_account_disabled() {
+///     Ok(is_disabled) => {
+///         if is_disabled {
+///             println!("Administrator account is disabled.");
+///         } else {
+///             println!("Administrator account is not disabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_admin_account_disabled() -> Result<bool, WinAuditError> {
     unsafe {
         let mut buffer: *mut USER_INFO_1 = std::ptr::null_mut();
@@ -1180,9 +1596,27 @@ pub fn is_admin_account_disabled() -> Result<bool, WinAuditError> {
     }
 }
 
-/// Check is guest access Disabled
+/// Check is guest access Disabled.
 ///
-/// This important for security! prevent login to the system as guest
+/// This important for security! prevent login to the system as guest.
+///
+/// # Example Usage
+/// ```
+/// use winaudit::is_guest_account_disabled;
+///
+/// match is_guest_account_disabled() {
+///     Ok(is_disabled) => {
+///         if is_disabled {
+///             println!("Guest account is disabled.");
+///         } else {
+///             println!("Guest account is not disabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_guest_account_disabled() -> Result<bool, WinAuditError> {
     unsafe {
         let mut buffer: *mut USER_INFO_1 = std::ptr::null_mut();
@@ -1213,7 +1647,25 @@ pub fn is_guest_account_disabled() -> Result<bool, WinAuditError> {
 
 /// Check is automatic update is Enabled
 ///
-/// This very important for security! Unlike manual update you can forget them and leave your system vulnerable
+/// This very important for security! Unlike manual update you can forget them and leaves your system vulnerable to cyberattacks.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_automatic_update_enabled;
+///
+/// match is_automatic_update_enabled() {
+///     Ok(is_enabled) => {
+///         if is_enabled {
+///             println!("Automatic update is enabled.");
+///         } else {
+///             println!("Automatic update is not enabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_automatic_update_enabled() -> Result<bool, WinAuditError> {
     unsafe {
         let mut hkey = windows::Win32::System::Registry::HKEY::default();
@@ -1256,9 +1708,27 @@ pub fn is_automatic_update_enabled() -> Result<bool, WinAuditError> {
     }
 }
 
-/// Check is dump of LSASS disallowed
+/// Check is dump of **LSASS** disallowed
 ///
-/// This very important for security! If this allowed an attacker can dump user senstive info such as (User Credentials)
+/// This very important for security! If this allowed an attacker can dump user senstive info such as (User Credentials).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_lsass_cannot_be_dumped;
+///
+/// match is_lsass_cannot_be_dumped() {
+///     Ok(is_cannot_be_dumped) => {
+///         if is_cannot_be_dumped {
+///             println!("LSASS cannot be dumped.");
+///         } else {
+///             println!("LSASS can be dumped.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_lsass_cannot_be_dumped() -> Result<bool, WinAuditError> {
     unsafe {
         let mut hkey = windows::Win32::System::Registry::HKEY::default();
@@ -1301,9 +1771,27 @@ pub fn is_lsass_cannot_be_dumped() -> Result<bool, WinAuditError> {
     }
 }
 
-/// Check is NTLM Disabled
+/// Check is NTLM Disabled.
 ///
-/// NTLM vulnerable to attacks like Pass The Hash and should be disabled.
+/// NTLM vulnerable to attacks like **Pass The Hash** and should be disabled.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_ntlm_disabled;
+///
+/// match is_ntlm_disabled() {
+///     Ok(is_disabled) => {
+///         if is_disabled {
+///             println!("NTLM is disabled.");
+///         } else {
+///             println!("NTLM is not disabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_ntlm_disabled() -> Result<bool, WinAuditError> {
     unsafe {
         let mut hkey = windows::Win32::System::Registry::HKEY::default();
@@ -1347,6 +1835,26 @@ pub fn is_ntlm_disabled() -> Result<bool, WinAuditError> {
     }
 }
 
+/// Check is **Credential Guard** Enabled.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_credential_guard_enabled;
+///
+/// match is_credential_guard_enabled() {
+///     Ok(is_enabled) => {
+///         if is_enabled {
+///             println!("Credential Guard is enabled.");
+///         } else {
+///             println!("Credential Guard is not enabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
+
 pub fn is_credential_guard_enabled() -> Result<bool, WinAuditError> {
     unsafe {
         let mut hkey = windows::Win32::System::Registry::HKEY::default();
@@ -1387,9 +1895,27 @@ pub fn is_credential_guard_enabled() -> Result<bool, WinAuditError> {
     }
 }
 
-/// Check is Drive Signing required for loading drivers to the kernel
+/// Check is Drive Signing required for loading drivers to the kernel.
 ///
-/// This very important for security! If not an attacker can deploy rootkits
+/// This very important for security! If not an attacker can deploy rootkits and bootkits.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_driver_signing_required;
+///
+/// match is_driver_signing_required() {
+///     Ok(is_required) => {
+///         if is_required {
+///             println!("Driver signing is required.");
+///         } else {
+///             println!("Driver signing is not required.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_driver_signing_required() -> Result<bool, WinAuditError> {
     unsafe {
         let mut hkey = windows::Win32::System::Registry::HKEY::default();
@@ -1435,7 +1961,25 @@ pub fn is_driver_signing_required() -> Result<bool, WinAuditError> {
 
 /// Check is PowerShell script signing is enabled
 ///
-/// This prevent untrusted script from running, However an attacker can still override the behavior by adding flag -Bypass to Set-ExecutionPolicy
+/// This prevent untrusted script from running, However an attacker can still override the behavior by adding flag `-Bypass` to `Set-ExecutionPolicy`.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_powershell_script_signing_enabled;
+///
+/// match is_powershell_script_signing_enabled() {
+///     Ok(is_enabled) => {
+///         if is_enabled {
+///             println!("PowerShell script signing is enabled.");
+///         } else {
+///             println!("PowerShell script signing is not enabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_powershell_script_signing_enabled() -> Result<bool, WinAuditError> {
     unsafe {
         let mut hkey = windows::Win32::System::Registry::HKEY::default();
@@ -1481,9 +2025,27 @@ pub fn is_powershell_script_signing_enabled() -> Result<bool, WinAuditError> {
     }
 }
 
-/// Check is DEP enabled
+/// Check is **DEP** (Data Execution Prevention) enabled
 ///
-/// DEP is a security feature prevent malicious code from executing in some areas of system memory.
+/// **DEP** is a security feature prevent malicious code from executing in some areas of system memory.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_dep_enabled;
+///
+/// match is_dep_enabled() {
+///     Ok(is_enabled) => {
+///         if is_enabled {
+///             println!("DEP is enabled.");
+///         } else {
+///             println!("DEP is not enabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_dep_enabled() -> Result<bool, WinAuditError> {
     unsafe {
         let process = GetCurrentProcess();
@@ -1507,7 +2069,25 @@ pub fn is_dep_enabled() -> Result<bool, WinAuditError> {
     }
 }
 
-/// Check is User Account Control enabled
+/// Check is **UAC** (User Account Control) enabled.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_uac_enabled;
+///
+/// match is_uac_enabled() {
+///     Ok(is_enabled) => {
+///         if is_enabled {
+///             println!("UAC is enabled.");
+///         } else {
+///             println!("UAC is not enabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_uac_enabled() -> Result<bool, WinAuditError> {
     const UAC_REG_KEY: &str = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System";
     const UAC_VALUE: &str = "EnableLUA";
@@ -1526,7 +2106,25 @@ pub fn is_uac_enabled() -> Result<bool, WinAuditError> {
     }
 }
 
-/// Check if Windows Sandbox is supported on this system
+/// Check if **Windows Sandbox** is supported on this system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_windows_sandbox_supported;
+///
+/// match is_windows_sandbox_supported() {
+///     Ok(is_supported) => {
+///         if is_supported {
+///             println!("Windows Sandbox is supported.");
+///         } else {
+///             println!("Windows Sandbox is not supported.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_windows_sandbox_supported() -> Result<bool, WinAuditError> {
     const SANDBOX_REG_KEY: &str = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Containers\CmService";
     const SANDBOX_VALUE: &str = "HvsiEnabled";
