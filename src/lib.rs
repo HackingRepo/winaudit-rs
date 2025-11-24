@@ -10,6 +10,35 @@ use windows::core::BOOL;
 use windows::core::HRESULT;
 pub(crate) use windows::{Win32::Foundation::WIN32_ERROR, core::Error as WinError};
 
+/// In version 0.1.2+ i export all theses modules to winaudit to directly use them.
+pub use hardwarechecks::{
+    cpu_support_machine_check, cpu_support_nx, cpu_support_second_level_address_translation,
+    cpu_support_speculation_control, cpu_support_sse3, cpu_support_supervisor_access_prevention,
+    cpu_support_supervisor_execution_prevention, cpu_support_virt_firmware, is_bios_uefi,
+    is_memory_guard_enabled, is_secure_boot_enabled, is_tpm, is_uefi_secure_variables_protection,
+    windows_defs::{
+        IOCTL_NDIS_QUERY_GLOBAL_STATS, IOCTL_STORAGE_QUERY_PROPERTY, OID_GEN_SRIOV_CAPABLE,
+        PropertyStandardQuery, STORAGE_PROPERTY_QUERY, StorageDeviceSecurityProperty,
+    },
+};
+
+#[cfg(target_arch = "x86_64")]
+pub use hardwarechecks::{cpu_support_avx, cpu_support_avx2, cpu_support_rdrand};
+#[cfg(target_arch = "arm")]
+pub use hardwarechecks::{
+    cpu_support_crypto, cpu_support_neon, cpu_support_neon_fma, cpu_support_neon_neon,
+};
+
+pub use oschecks::*;
+pub use softwarechecks::*;
+
+#[cfg(feature = "experimental")]
+pub use hardwarechecks::gpuchecks::*;
+#[cfg(feature = "experimental")]
+pub use hardwarechecks::network_adapters_checks::*;
+#[cfg(feature = "experimental")]
+pub use hardwarechecks::ssd_checks::*;
+
 /// An error for failed windows security audit
 #[derive(Debug)]
 pub enum WinAuditError {
@@ -128,7 +157,8 @@ impl WinAuditError {
     }
 }
 
-/// A helper to convert os errors to WinAuditError type
+#[doc(hidden)]
+/// A helper to convert os errors to WinAuditError type.
 pub(crate) fn win32_to_audit_error(
     code: WIN32_ERROR,
     audit: &'static str,
@@ -143,6 +173,8 @@ pub(crate) fn win32_to_audit_error(
     }
 }
 
+#[doc(hidden)]
+/// A helper to convert os `HRESULT` to WinAuditError type.
 pub(crate) fn hresult_to_audit_error(
     hr: HRESULT,
     audit: &'static str,
