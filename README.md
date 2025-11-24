@@ -16,7 +16,7 @@ PS> cargo add winaudit
 
 And in main.rs 
 ```rust
-use winaudit::softwarechecks::is_bitdefender_installed_and_enabled;
+use winaudit::is_bitdefender_installed_and_enabled;
 fn main() {
     let is_bitdefender_installed = match is_bitdefender_installed_and_enabled() {
         Ok(b) => b,
