@@ -1,4 +1,8 @@
 //! This module experimental offer GPU security checks
+//! 
+//! # Note:
+//! For using theses features, You need enable "experimental" feature in Cargo.toml.
+//! 
 
 
 
@@ -22,6 +26,23 @@ pub(crate) struct AdapterInfo {
     pub supported_extensions: Vec<String>,
 }
 
+/// Get all vulkan adapters.
+/// 
+/// # Example Usage:
+/// ```
+/// use winaudit::get_vulkan_adapters;
+///
+/// match get_vulkan_adapters() {
+///     Ok(adapters) => {
+///         for adapter in adapters {
+///             println!("Adapter: {:?}", adapter);
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub(crate) fn get_vulkan_adapters() -> Result<Vec<AdapterInfo>, WinAuditError> {
     let entry = match unsafe { ash::Entry::linked() } {
         Ok(e) => e,
@@ -111,6 +132,25 @@ pub(crate) fn get_vulkan_adapters() -> Result<Vec<AdapterInfo>, WinAuditError> {
     Ok(adapters)
 }
 
+/// Check is GPU from trusted vendor.
+/// 
+/// # Example Usage:
+/// ```
+/// use winaudit::is_gpu_from_trusted_vendor;
+///
+/// match is_gpu_from_trusted_vendor() {
+///     Ok(is_trusted) => {
+///         if is_trusted {
+///             println!("GPU is from a trusted vendor.");
+///         } else {
+///             println!("GPU is not from a trusted vendor.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub(crate) fn is_gpu_from_trusted_vendor(adapter: &AdapterInfo) -> bool {
     match adapter.vendor_id {
         0x10DE  | 0x1002 | 0x8086 => true,
@@ -119,6 +159,25 @@ pub(crate) fn is_gpu_from_trusted_vendor(adapter: &AdapterInfo) -> bool {
 }
 
 /// Check if all requested device extensions are supported by the adapter
+/// 
+/// # Example Usage:
+///
+/// ```
+/// use winaudit::is_gpu_supports_extensions;
+///
+/// match is_gpu_supports_extensions() {
+///     Ok(supports_extensions) => {
+///         if supports_extensions {
+///             println!("GPU supports all requested extensions");
+///         } else {
+///             println!("GPU does not support all requested extensions");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+///
 pub(crate) fn is_gpu_supports_extensions(adapter: &AdapterInfo, extensions: &[&str]) -> bool {
     extensions.iter().all(|req| {
         adapter
@@ -129,6 +188,25 @@ pub(crate) fn is_gpu_supports_extensions(adapter: &AdapterInfo, extensions: &[&s
 }
 
 /// Check whether the system has any Vulkan device (=> SPIR-V pipeline usable)
+/// 
+/// # Example Usage:
+///
+/// ```
+/// use winaudit::is_gpu_supports_spirv;
+///
+/// match is_gpu_supports_spirv() {
+///     Ok(supports_spirv) => {
+///         if supports_spirv {
+///             println!("GPU supports SPIR-V pipeline");
+///         } else {
+///             println!("GPU does not support SPIR-V pipeline");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub(crate) fn is_gpu_supports_spirv() -> Result<bool, WinAuditError> {
     match get_vulkan_adapters() {
         Ok(adapters) => Ok(!adapters.is_empty()),
@@ -137,6 +215,25 @@ pub(crate) fn is_gpu_supports_spirv() -> Result<bool, WinAuditError> {
 }
 
 /// Check whether GPU advertises support for protected memory extension.
+/// 
+/// # Example Usage:
+///
+/// ```
+/// use winaudit::is_gpu_supports_protected_memory;
+///
+/// match is_gpu_supports_protected_memory() {
+///     Ok(supports_protected_memory) => {
+///         if supports_protected_memory {
+///             println!("GPU supports protected memory.");
+///         } else {
+///             println!("GPU does not support protected memory.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub(crate) fn is_gpu_supports_protected_memory() -> Result<bool, WinAuditError> {
     let adapters = get_vulkan_adapters()?;
     let candidates = &[
