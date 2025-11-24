@@ -1,5 +1,4 @@
 //! This provide Security Software Checks for windows systems
-//!
 use std::path::Path;
 use std::process::Command;
 
@@ -11,6 +10,25 @@ use winreg::enums::KEY_READ;
 
 use crate::WinAuditError;
 
+/// Check if **Bitdefender** is installed on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_bitdefender_installed;
+///
+/// match is_bitdefender_installed() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("Bitdefender is installed.");
+///         } else {
+///             println!("Bitdefender is not installed.");
+///         }
+///     }
+///     Err(error) => {
+///         eprintln!("Error: {}", error);
+///     }
+/// }
+/// ```
 pub fn is_bitdefender_installed() -> Result<bool, WinAuditError> {
     const BITDEFENDER_KEY: &str = r"SOFTWARE\Bitdefender";
     let hklm = RegKey::predef(enums::HKEY_LOCAL_MACHINE);
@@ -21,6 +39,25 @@ pub fn is_bitdefender_installed() -> Result<bool, WinAuditError> {
     }
 }
 
+/// Check if **Windows Defender** is installed on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_windows_defender_enabled;
+///
+/// match is_windows_defender_enabled() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("Windows Defender is installed.");
+///         } else {
+///             println!("Windows Defender is not installed.");
+///         }
+///     }
+///     Err(e) => {    
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_windows_defender_enabled() -> Result<bool, WinAuditError> {
     const WD_REG_KEY: &str = r"SOFTWARE\Microsoft\Windows Defender";
     let hklm = RegKey::predef(enums::HKEY_LOCAL_MACHINE);
@@ -31,7 +68,25 @@ pub fn is_windows_defender_enabled() -> Result<bool, WinAuditError> {
     }
 }
 
-/// Check if Bitdefender is installed and enabled
+/// Check if **Bitdefender** is installed and enabled on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_bitdefender_installed_and_enabled;
+///
+/// match is_bitdefender_installed_and_enabled() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("Bitdefender is installed and enabled")
+///         } else {
+///             println!("Bitdefender is not installed or not enabled")
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_bitdefender_installed_and_enabled() -> Result<bool, WinAuditError> {
     const BITDEFENDER_KEY: &str = r"SOFTWARE\Bitdefender\Bitdefender Security";
 
@@ -49,7 +104,25 @@ pub fn is_bitdefender_installed_and_enabled() -> Result<bool, WinAuditError> {
     Ok(product_state != 0)
 }
 
-/// Check if Bitdefender Total Security is installed
+/// Check if **Bitdefender Total Security** is installed on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_bitdefender_total_security;
+///
+/// match is_bitdefender_total_security() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("Bitdefender Total Security is installed.");
+///         } else {
+///             println!("Bitdefender Total Security is not installed.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_bitdefender_total_security() -> Result<bool, WinAuditError> {
     const BITDEFENDER_TOTAL_KEY: &str = r"SOFTWARE\Bitdefender\Bitdefender Security\Total Security";
 
@@ -67,6 +140,25 @@ pub fn is_bitdefender_total_security() -> Result<bool, WinAuditError> {
     Ok(product_state != 0)
 }
 
+/// Check is **Wazuh Agent** installed and configured on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_wazuh_agent_installed_and_configured;
+///
+/// match is_wazuh_agent_installed_and_configured() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("Wazuh Agent is installed and configured.");
+///         } else {
+///             println!("Wazuh Agent is not installed or not configured.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_wazuh_agent_installed_and_configured() -> Result<bool, WinAuditError> {
     let wazuh_path = r"C:\Program Files (x86)\ossec-agent";
 
@@ -96,7 +188,25 @@ pub fn is_wazuh_agent_installed_and_configured() -> Result<bool, WinAuditError> 
     }
 }
 
-/// Check is Norton 360 Deluxe installed
+/// Check is **Norton 360 Deluxe** installed in the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_norton_360_deluxe_installed;
+///
+/// match is_norton_360_deluxe_installed() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("Norton 360 Deluxe is installed.");
+///         } else {
+///             println!("Norton 360 Deluxe is not installed.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_norton_360_deluxe_installed() -> Result<bool, WinAuditError> {
     let norton_path = r"C:\Program Files\Norton Security";
 
@@ -121,7 +231,25 @@ pub fn is_norton_360_deluxe_installed() -> Result<bool, WinAuditError> {
     }
 }
 
-/// Check is Norton 360 Deluxe installed and enabled
+/// Check is **Norton 360 Deluxe** installed and enabled on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_norton_360_deluxe_installed_and_enabled;
+///
+/// match is_norton_360_deluxe_installed_and_enabled() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("Norton 360 Deluxe is installed and enabled.");
+///         } else {
+///             println!("Norton 360 Deluxe is not installed or not enabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_norton_360_deluxe_installed_and_enabled() -> Result<bool, WinAuditError> {
     let norton_path = r"C:\Program Files\Norton Security";
 
@@ -146,11 +274,13 @@ pub fn is_norton_360_deluxe_installed_and_enabled() -> Result<bool, WinAuditErro
     }
 }
 
-/// Generic helper to check if a folder exists
+#[doc(hidden)]
+/// Generic helper to check if a folder exists.
 fn is_program_installed(path: &str) -> bool {
     Path::new(path).exists()
 }
 
+#[doc(hidden)]
 /// Generic helper to check if a service is running
 fn is_service_running(service_name: &str) -> Result<bool, WinAuditError> {
     let output = Command::new("sc")
@@ -165,11 +295,48 @@ fn is_service_running(service_name: &str) -> Result<bool, WinAuditError> {
     Ok(stdout.contains("RUNNING"))
 }
 
+/// Check is **NordVPN** installed on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_nord_vpn_installed;
+///
+/// match is_nord_vpn_installed() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("NordVPN is installed.");
+///         } else {
+///             println!("NordVPN is not installed.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_nord_vpn_installed() -> Result<bool, WinAuditError> {
     Ok(is_program_installed(r"C:\Program Files\NordVPN"))
 }
 
-/// Check is NordVPN installed and running properly
+/// Check is **NordVPN** installed and running properly on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_nord_vpn_installed_and_running;
+///
+/// match is_nord_vpn_installed_and_running() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("NordVPN is installed and running.");
+///         } else {
+///             println!("NordVPN is not installed or not running.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_nord_vpn_installed_and_running() -> Result<bool, WinAuditError> {
     if !is_nord_vpn_installed()? {
         return Ok(false);
@@ -177,22 +344,95 @@ pub fn is_nord_vpn_installed_and_running() -> Result<bool, WinAuditError> {
     is_service_running("NordVPNService")
 }
 
-/// Check is ProtonVPN installed
+/// Check is **ProtonVPN** installed on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_proton_vpn_installed;
+///
+/// match is_proton_vpn_installed() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("ProtonVPN is installed.");
+///         } else {
+///             println!("ProtonVPN is not installed.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_proton_vpn_installed() -> Result<bool, WinAuditError> {
     Ok(is_program_installed(r"C:\Program Files\ProtonVPN"))
 }
 
-/// Check is SurfShark VPN installed
+/// Check is **SurfSharkVPN** installed on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_surfshark_vpn_installed;
+///
+/// match is_surfshark_vpn_installed() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("SurfSharkVPN is installed.");
+///         } else {
+///             println!("SurfSharkVPN is not installed.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
+
 pub fn is_surfshark_vpn_installed() -> Result<bool, WinAuditError> {
     Ok(is_program_installed(r"C:\Program Files\Surfshark"))
 }
 
-/// Check is ExpressVPN installed
+/// Check is **ExpressVPN** installed on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_express_vpn_installed;
+///
+/// match is_express_vpn_installed() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("ExpressVPN is installed.");
+///         } else {
+///             println!("ExpressVPN is not installed.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_express_vpn_installed() -> Result<bool, WinAuditError> {
     Ok(is_program_installed(r"C:\Program Files\ExpressVPN"))
 }
 
-/// Chech is ExpressVPN installed and running properly
+/// Chech is **ExpressVPN** installed and running properly on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_express_vpn_installed_and_running;
+///
+/// match is_express_vpn_installed_and_running() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("ExpressVPN is installed and running.");
+///         } else {
+///             println!("ExpressVPN is not installed or not running.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_express_vpn_installed_and_running() -> Result<bool, WinAuditError> {
     if !is_express_vpn_installed()? {
         return Ok(false);
@@ -200,7 +440,25 @@ pub fn is_express_vpn_installed_and_running() -> Result<bool, WinAuditError> {
     is_service_running("ExpressVPNService")
 }
 
-/// Check is Surfshark VPN installed and running properly
+/// Check is **SurfsharkVPN** installed and running properly on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_surfshark_vpn_installed_and_running;
+///
+/// match is_surfshark_vpn_installed_and_running() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("SurfSharkVPN is installed and running.");
+///         } else {
+///             println!("SurfSharkVPN is not installed or not running.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_surfshark_vpn_installed_and_running() -> Result<bool, WinAuditError> {
     if !is_surfshark_vpn_installed()? {
         return Ok(false);
@@ -208,7 +466,25 @@ pub fn is_surfshark_vpn_installed_and_running() -> Result<bool, WinAuditError> {
     is_service_running("SurfsharkService")
 }
 
-/// Check is ProtonVPN installed and running properly
+/// Check is **ProtonVPN** installed and running properly on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_proton_vpn_installed_and_running;
+///
+/// match is_proton_vpn_installed_and_running() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("ProtonVPN is installed and running.");
+///         } else {
+///             println!("ProtonVPN is not installed or not running.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_proton_vpn_installed_and_running() -> Result<bool, WinAuditError> {
     if !is_proton_vpn_installed()? {
         return Ok(false);
@@ -216,7 +492,25 @@ pub fn is_proton_vpn_installed_and_running() -> Result<bool, WinAuditError> {
     is_service_running("ProtonVPNService")
 }
 
-/// Check if the OSSEC agent is installed and running
+/// Check if the **OSSEC agent** is installed and running on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_ossec_agent_installed_and_configured;
+///
+/// match is_ossec_agent_installed_and_configured() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("OSSEC agent is installed and running.");
+///         } else {
+///             println!("OSSEC agent is not installed or not running.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_ossec_agent_installed_and_configured() -> Result<bool, WinAuditError> {
     let paths = [
         r"C:\Program Files\ossec-agent",
@@ -241,7 +535,25 @@ pub fn is_ossec_agent_installed_and_configured() -> Result<bool, WinAuditError> 
     Ok(stdout.contains("RUNNING"))
 }
 
-/// Check is ThreatLocker agent installed and configured
+/// Check is **ThreatLocker agent** installed and configured on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_threatlocker_agent_installed_and_configured;
+///
+/// match is_threatlocker_agent_installed_and_configured() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("ThreatLocker agent is installed and configured.");
+///         } else {
+///             println!("ThreatLocker agent is not installed or not configured.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_threatlocker_agent_installed_and_configured() -> Result<bool, WinAuditError> {
     let possible_paths = [
         r"C:\Program Files\ThreatLocker",
@@ -265,7 +577,25 @@ pub fn is_threatlocker_agent_installed_and_configured() -> Result<bool, WinAudit
     Ok(stdout.contains("RUNNING"))
 }
 
-/// Check if the CrowdStrike Falcon agent is installed and configured.
+/// Check if the **CrowdStrike Falcon agent** is installed and configured on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_crowdstrike_falcon_agent_installed_and_configured;
+///
+/// match is_crowdstrike_falcon_agent_installed_and_configured() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("CrowdStrike Falcon agent is installed and configured.");
+///         } else {
+///             println!("CrowdStrike Falcon agent is not installed or not configured.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_crowdstrike_falcon_agent_installed_and_configured() -> Result<bool, WinAuditError> {
     let falcon_path = r"C:\Program Files\CrowdStrike";
 
@@ -290,7 +620,25 @@ pub fn is_crowdstrike_falcon_agent_installed_and_configured() -> Result<bool, Wi
     }
 }
 
-/// Check is Cloudflare Warp installed and running
+/// Check is **Cloudflare Warp** installed and running on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_cloudflare_warp_installed_and_running;
+///
+/// match is_cloudflare_warp_installed_and_running() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("Cloudflare Warp is installed and running.");
+///         } else {
+///             println!("Cloudflare Warp is not installed or not running.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_cloudflare_warp_installed_and_running() -> Result<bool, WinAuditError> {
     let warp_path = r"C:\Program Files\Cloudflare\Cloudflare WARP";
 
@@ -315,7 +663,25 @@ pub fn is_cloudflare_warp_installed_and_running() -> Result<bool, WinAuditError>
     }
 }
 
-/// Check is SentinelOne Agent installed and configured
+/// Check is **SentinelOne Agent** installed and configured on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_sentinelone_agent_installed_and_configured;
+///
+/// match is_sentinelone_agent_installed_and_configured() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("SentinelOne agent installed and configured.");
+///         } else {
+///             println!("SentinelOne agent is not installed or not configured.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_sentinelone_agent_installed_and_configured() -> Result<bool, WinAuditError> {
     let s1_path = r"C:\Program Files\SentinelOne";
 
@@ -340,7 +706,25 @@ pub fn is_sentinelone_agent_installed_and_configured() -> Result<bool, WinAuditE
     }
 }
 
-/// Check is Vmware Carbon Black Agent installed and configured
+/// Check is **Vmware Carbon Black Agent** installed and configured on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_carbon_black_agent_installed_and_configured;
+///
+/// match is_carbon_black_agent_installed_and_configured() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("Vmware Carbon Black Agent installed and configured");
+///         }else {
+///             println!("Vmware Carbon Black Agent is not installed or not configured");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_carbon_black_agent_installed_and_configured() -> Result<bool, WinAuditError> {
     let cb_path = r"C:\Program Files\CarbonBlack";
 
@@ -365,7 +749,25 @@ pub fn is_carbon_black_agent_installed_and_configured() -> Result<bool, WinAudit
     }
 }
 
-/// Check is BitDefender GravityZone Agent installed and configured
+/// Check is **BitDefender GravityZone Agent** installed and configured on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_bitdefender_gravityzone_agent_installed;
+///
+/// match is_bitdefender_gravityzone_agent_installed() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("BitDefender GravityZone Agent installed and configured");
+///         }else {
+///             println!("BitDefender GravityZone Agent is not installed or not configured");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_bitdefender_gravityzone_agent_installed() -> Result<bool, WinAuditError> {
     let gz_path = r"C:\Program Files\Bitdefender\Endpoint Security";
 
@@ -390,7 +792,25 @@ pub fn is_bitdefender_gravityzone_agent_installed() -> Result<bool, WinAuditErro
     }
 }
 
-/// Check if NordLayer is installed and running properly
+/// Check if **NordLayer** is installed and running properly on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_nordlayer_installed_and_running;
+///
+/// match is_nordlayer_installed_and_running() {
+///     Ok(installed_and_running) => {
+///         if installed_and_running {
+///             println!("NordLayer installed and running.");
+///         } else {
+///             println!("NordLayer is not installed or not running.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_nordlayer_installed_and_running() -> Result<bool, WinAuditError> {
     let nordlayer_path = r"C:\Program Files\NordLayer";
 
@@ -415,7 +835,25 @@ pub fn is_nordlayer_installed_and_running() -> Result<bool, WinAuditError> {
     }
 }
 
-/// Check if Sophos antivirus is Installed and Enabled
+/// Check if **Sophos antivirus** is Installed and Enabled on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_sophos_antivirus_installed_and_enabled;
+///
+/// match is_sophos_antivirus_installed_and_enabled() {
+///     Ok(installed_and_enabled) => {
+///         if installed_and_enabled {
+///             println!("Sophos antivirus installed and enabled.");
+///         } else {
+///             println!("Sophos antivirus is not installed or not enabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_sophos_antivirus_installed_and_enabled() -> Result<bool, WinAuditError> {
     let sophos_path = r"C:\Program Files\Sophos\Sophos Anti-Virus";
 
@@ -440,7 +878,25 @@ pub fn is_sophos_antivirus_installed_and_enabled() -> Result<bool, WinAuditError
     }
 }
 
-/// Check if Sophos InterceptX agent is installed and configured
+/// Check if **Sophos InterceptX agent** is installed and configured and configured on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_sophos_interceptx_agent_installed_and_configured;
+///
+/// match is_sophos_interceptx_agent_installed_and_configured() {
+///     Ok(installed_and_configured) => {
+///         if installed_and_configured {
+///             println!("Sophos InterceptX agent installed and configured.");
+///         } else {
+///             println!("Sophos InterceptX agent is not installed or not configured.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_sophos_interceptx_agent_installed_and_configured() -> Result<bool, WinAuditError> {
     let paths = [
         r"C:\Program Files\Sophos\Endpoint Agent",
@@ -491,6 +947,25 @@ pub fn is_sophos_interceptx_agent_installed_and_configured() -> Result<bool, Win
     }
 }
 
+/// Check is **MalwareBytes** antivirus installed and enabled on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_malwarebytes_antivirus_installed_and_enabled;
+///
+/// match is_malwarebytes_antivirus_installed_and_enabled() {
+///     Ok(installed_and_enabled) => {
+///         if installed_and_enabled {
+///             println!("MalwareBytes antivirus installed and enabled.");
+///         } else {
+///             println!("MalwareBytes antivirus is not installed or not enabled.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_malwarebytes_antivirus_installed_and_enabled() -> Result<bool, WinAuditError> {
     let install_path = r"C:\Program Files\Malwarebytes\Anti-Malware";
     if !Path::new(install_path).exists() {
@@ -540,7 +1015,25 @@ pub fn is_malwarebytes_antivirus_installed_and_enabled() -> Result<bool, WinAudi
     }
 }
 
-/// Check is MalwareBytes endpoint Agent installed and configured
+/// Check is **MalwareBytes endpoint Agent** installed and configured on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_malwarebytes_endpoint_agent_installed_and_configured;
+///
+/// match is_malwarebytes_endpoint_agent_installed_and_configured() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("MalwareBytes endpoint Agent installed and configured.");
+///         } else {
+///             println!("MalwareBytes endpoint Agent is not installed or not configured.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_malwarebytes_endpoint_agent_installed_and_configured() -> Result<bool, WinAuditError> {
     const POSSIBLE_PATHS: &[&str] = &[
         r"C:\Program Files\Malwarebytes Endpoint Agent",
@@ -588,7 +1081,25 @@ pub fn is_malwarebytes_endpoint_agent_installed_and_configured() -> Result<bool,
     }
 }
 
-/// Check is Manage Engine Endpoint Agent Installed and Configured
+/// Check is **Manage Engine Endpoint Agent** Installed and Configured on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_manage_engine_endpoint_central_agent_installed_and_configured;
+///
+/// match is_manage_engine_endpoint_central_agent_installed_and_configured() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("Manage Engine Endpoint Agent installed and configured.");
+///         } else {
+///             println!("Manage Engine Endpoint Agent not installed or configured.")
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_manage_engine_endpoint_central_agent_installed_and_configured()
 -> Result<bool, WinAuditError> {
     const POSSIBLE_PATHS: &[&str] = &[
@@ -660,7 +1171,25 @@ pub fn is_manage_engine_endpoint_central_agent_installed_and_configured()
     Ok(true)
 }
 
-/// Check is wireshark installed
+/// Check is **Wireshark** installed on the system.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_wireshark_installed;
+///
+/// match is_wireshark_installed() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("Wireshark is installed.");
+///         } else {
+///             println!("Wireshark is not installed.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_wireshark_installed() -> Result<bool, WinAuditError> {
     let common_paths = [
         r"C:\Program Files\Wireshark\Wireshark.exe",
@@ -714,6 +1243,25 @@ pub fn is_wireshark_installed() -> Result<bool, WinAuditError> {
     Ok(false)
 }
 
+/// Check is **Bitdefender Total Security** is installed and enabled and not EOL (End Of Life).
+///
+/// # Example Usage
+/// ```
+/// use winaudit::is_bitdefender_total_security_and_not_eol;
+///
+/// match is_bitdefender_total_security_and_not_eol() {
+///     Ok(installed) => {
+///         if installed {
+///             println!("Bitdefender Total Security is installed and enabled and not EOL.");
+///         }else {
+///             println!("Bitdefender Total Security is not installed or not enabled or EOL.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_bitdefender_total_security_and_not_eol() -> Result<bool, WinAuditError> {
     const KEY: &str = r"SOFTWARE\Bitdefender\Bitdefender Security\Total Security";
     const MIN_VERSION: &str = "25.0.0";
@@ -735,6 +1283,25 @@ pub fn is_bitdefender_total_security_and_not_eol() -> Result<bool, WinAuditError
     Ok(version >= MIN_VERSION.to_string())
 }
 
+/// Check is **Norton 360 Deluxe** Installed and enabled and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_norton_360_deluxe_installed_and_not_eol;
+///
+/// match is_norton_360_deluxe_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("Norton 360 Deluxe is installed and enabled and not EOL.");
+///         }else {
+///             println!("Norton 360 Deluxe is not installed or not enabled or EOL")
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_norton_360_deluxe_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let path = r"C:\Program Files\Norton Security";
     if !Path::new(path).exists() {
@@ -754,6 +1321,25 @@ pub fn is_norton_360_deluxe_installed_and_not_eol() -> Result<bool, WinAuditErro
     Ok(false)
 }
 
+/// Check is **MalwareBytes** antivirus installed and enabled and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_malwarebytes_antivirus_installed_and_not_eol;
+///
+/// match is_malwarebytes_antivirus_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("MalwareBytes antivirus is installed and enabled and not EOL.");
+///         }else {
+///             println!("MalwareBytes antivirus is not installed or not enabled or EOL")
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_malwarebytes_antivirus_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let path = r"C:\Program Files\Malwarebytes\Anti-Malware";
     if !Path::new(path).exists() {
@@ -776,6 +1362,25 @@ pub fn is_malwarebytes_antivirus_installed_and_not_eol() -> Result<bool, WinAudi
     Ok(false)
 }
 
+/// Check is **Sophos** antivirus installed and enabled and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_sophos_antivirus_installed_and_not_eol;
+///
+/// match is_sophos_antivirus_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("Sophos antivirus is installed and enabled and not EOL.");
+///         }else {
+///             println!("Sophos antivirus is not installed or not enabled or EOL")
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_sophos_antivirus_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let path = r"C:\Program Files\Sophos\Sophos Anti-Virus";
     if !Path::new(path).exists() {
@@ -795,6 +1400,25 @@ pub fn is_sophos_antivirus_installed_and_not_eol() -> Result<bool, WinAuditError
     Ok(false)
 }
 
+/// Check is **ossec-agent** installed and configured and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_ossec_agent_installed_and_not_eol;
+///
+/// match is_ossec_agent_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("ossec-agent is installed and configured and not EOL.");
+///         }else {
+///             println!("ossec-agent is not installed or not configured or EOL")
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_ossec_agent_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let paths = [
         r"C:\Program Files\ossec-agent",
@@ -824,6 +1448,25 @@ pub fn is_ossec_agent_installed_and_not_eol() -> Result<bool, WinAuditError> {
     Ok(false)
 }
 
+/// Check is **NordVPN** installed and running properly and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_nord_vpn_installed_and_not_eol;
+///
+/// match is_nord_vpn_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("NordVPN is installed and running properly and not EOL.");
+///         }else {
+///             println!("NordVPN is not installed or not running properly or EOL")
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_nord_vpn_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let path = r"C:\Program Files\NordVPN";
     if !Path::new(path).exists() {
@@ -843,6 +1486,25 @@ pub fn is_nord_vpn_installed_and_not_eol() -> Result<bool, WinAuditError> {
     Ok(false)
 }
 
+/// Check is **ExpressVPN** installed and running properly and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_express_vpn_installed_and_not_eol;
+///
+/// match is_express_vpn_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("ExpressVPN is installed and running properly and not EOL.");
+///         }else {
+///             println!("ExpressVPN is not installed or not running properly or EOL");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_express_vpn_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let path = r"C:\Program Files\ExpressVPN";
     if !Path::new(path).exists() {
@@ -862,6 +1524,25 @@ pub fn is_express_vpn_installed_and_not_eol() -> Result<bool, WinAuditError> {
     Ok(false)
 }
 
+/// Check is **SurfShark VPN** installed and running properly and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_surfshark_vpn_installed_and_not_eol;
+///
+/// match is_surfshark_vpn_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("SurfShark VPN is installed and running properly and not EOL.");
+///         }else {
+///             println!("SurfShark VPN is not installed or not running properly or EOL");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_surfshark_vpn_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let path = r"C:\Program Files\Surfshark";
     if !Path::new(path).exists() {
@@ -881,6 +1562,25 @@ pub fn is_surfshark_vpn_installed_and_not_eol() -> Result<bool, WinAuditError> {
     Ok(false)
 }
 
+/// Check is **ProtonVPN** installed and running properly and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_proton_vpn_installed_and_not_eol;
+///
+/// match is_proton_vpn_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("ProtonVPN is installed and running properly and not EOL.");
+///         }else {
+///             println!("ProtonVPN is not installed or not running properly or EOL");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_proton_vpn_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let path = r"C:\Program Files\ProtonVPN";
     if !Path::new(path).exists() {
@@ -900,6 +1600,25 @@ pub fn is_proton_vpn_installed_and_not_eol() -> Result<bool, WinAuditError> {
     Ok(false)
 }
 
+/// Check is **NordLayer** installed and running properly and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_nordlayer_installed_and_not_eol;
+///
+/// match is_nordlayer_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("NordLayer is installed and running properly and not EOL.");
+///         }else {
+///             println!("NordLayer is not installed or not running properly or EOL");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_nordlayer_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let path = r"C:\Program Files\NordLayer";
     if !Path::new(path).exists() {
@@ -919,6 +1638,25 @@ pub fn is_nordlayer_installed_and_not_eol() -> Result<bool, WinAuditError> {
     Ok(false)
 }
 
+/// Check is **Wireshark** installed and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_wireshark_installed_and_not_eol;
+///
+/// match is_wireshark_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("Wireshark is installed and not EOL.");
+///         }else {
+///             println!("Wireshark is not installed or EOL")
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_wireshark_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let paths = [
         r"C:\Program Files\Wireshark\Wireshark.exe",
@@ -940,6 +1678,25 @@ pub fn is_wireshark_installed_and_not_eol() -> Result<bool, WinAuditError> {
     Ok(false)
 }
 
+/// Check is **Manage Engine Endpoint Agent** installed and configured and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_manage_engine_endpoint_agent_installed_and_not_eol;
+///
+/// match is_manage_engine_endpoint_agent_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("Manage Engine Endpoint Agent is installed and configured and not EOL.");
+///         }else {
+///             println!("Manage Engine Endpoint Agent is not installed or not configured or EOL")
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_manage_engine_endpoint_agent_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let paths = [
         r"C:\Program Files\ManageEngine\UEMS_Agent",
@@ -974,6 +1731,25 @@ pub fn is_manage_engine_endpoint_agent_installed_and_not_eol() -> Result<bool, W
     Ok(false)
 }
 
+/// Check is **MalwareBytes Endpoint Agent** installed and configured and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_malwarebytes_endpoint_agent_installed_and_not_eol;
+///
+/// match is_malwarebytes_endpoint_agent_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("MalwareBytes EndPoint Agent installed and configured and not an EOL");
+///         }else {
+///             println!("MalwareBytes EndPoint Agent is not installed or not configured or EOL");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_malwarebytes_endpoint_agent_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let paths = [
         r"C:\Program Files\Malwarebytes Endpoint Agent",
@@ -1002,6 +1778,25 @@ pub fn is_malwarebytes_endpoint_agent_installed_and_not_eol() -> Result<bool, Wi
     Ok(false)
 }
 
+/// Check is **Sophos InterceptX agent** installed and configured and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_sophos_interceptx_agent_installed_and_not_eol;
+///
+/// match is_sophos_interceptx_agent_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("Sophos InterceptX agent is installed and configured and not EOL.");
+///         }else {
+///             println!("Sophos InterceptX agent is not installed or not configured or EOL");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_sophos_interceptx_agent_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let paths = [
         r"C:\Program Files\Sophos\Endpoint Agent",
@@ -1032,6 +1827,25 @@ pub fn is_sophos_interceptx_agent_installed_and_not_eol() -> Result<bool, WinAud
     Ok(false)
 }
 
+/// Check is **BitDefender GravityZone Agent** installed and configured and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_bitdefender_gravityzone_agent_installed_and_not_eol;
+///
+/// match is_bitdefender_gravityzone_agent_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("BitDefender GravityZone Agent is installed and configured and not EOL.");
+///         }else {
+///             println!("BitDefender GravityZone Agent is not installed or configured or an EOL")
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_bitdefender_gravityzone_agent_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let path = r"C:\Program Files\Bitdefender\Endpoint Security";
     if !Path::new(path).exists() {
@@ -1051,6 +1865,25 @@ pub fn is_bitdefender_gravityzone_agent_installed_and_not_eol() -> Result<bool, 
     Ok(false)
 }
 
+/// Check is **Cloudflare Warp** installed and running properly and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_cloudflare_warp_installed_and_not_eol;
+///
+/// match is_cloudflare_warp_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("Cloudflare Warp Installed and running properly and not an EOL");
+///         }else {
+///             println!("Cloudflare Warp is not installed or not running properly or EOL");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_cloudflare_warp_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let path = r"C:\Program Files\Cloudflare\Cloudflare WARP";
     if !Path::new(path).exists() {
@@ -1070,6 +1903,25 @@ pub fn is_cloudflare_warp_installed_and_not_eol() -> Result<bool, WinAuditError>
     Ok(false)
 }
 
+/// Check is **VMWare Carbon Black Agent** installed and configured and not an EOL.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_carbon_black_agent_installed_and_not_eol;
+///
+/// match is_carbon_black_agent_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("VMWare Carbon Black Agent is installed and configured and not EOL.");
+///         }else {
+///             println!("VMWare Carbon Black Agent is not installed or not configured or EOL");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_carbon_black_agent_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let path = r"C:\Program Files\CarbonBlack";
     if !Path::new(path).exists() {
@@ -1089,6 +1941,25 @@ pub fn is_carbon_black_agent_installed_and_not_eol() -> Result<bool, WinAuditErr
     Ok(false)
 }
 
+/// Check is **SentinelOne Agent** installed and configured and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_sentinelone_agent_installed_and_not_eol;
+///
+/// match is_sentinelone_agent_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("SentinelOne agent installed and configured and not an EOL");
+///         }else {
+///             println!("SentinelOne agent not installed or not configured or an EOL");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("{:?}", e);
+///     }
+/// }
+/// ```
 pub fn is_sentinelone_agent_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let path = r"C:\Program Files\SentinelOne";
     if !Path::new(path).exists() {
@@ -1108,6 +1979,25 @@ pub fn is_sentinelone_agent_installed_and_not_eol() -> Result<bool, WinAuditErro
     Ok(false)
 }
 
+/// Check is **CrowdStrike Falcon Agent** installed and configured and not an EOL.
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_crowdstrike_falcon_agent_installed_and_not_eol;
+///
+/// match is_crowdstrike_falcon_agent_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("CrowdStrike Falcon Agent installed or configured or not an EOL");
+///         }else {
+///             println!("CrowdStrike Falcon Agent is not installed or not configured or EOL");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_crowdstrike_falcon_agent_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let path = r"C:\Program Files\CrowdStrike";
     if !Path::new(path).exists() {
@@ -1127,6 +2017,25 @@ pub fn is_crowdstrike_falcon_agent_installed_and_not_eol() -> Result<bool, WinAu
     Ok(false)
 }
 
+/// Check is **ThreatLocker Agent** installed and configured and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_threatlocker_agent_installed_and_not_eol;
+///
+/// match is_threatlocker_agent_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("ThreatLocker agent installed or configured or not an EOL.");
+///         }else {
+///             println!("ThreatLocker agent is not installed or not configured or an EOL.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("Error: {}", e);
+///     }
+/// }
+/// ```
 pub fn is_threatlocker_agent_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let paths = [
         r"C:\Program Files\ThreatLocker",
@@ -1150,6 +2059,25 @@ pub fn is_threatlocker_agent_installed_and_not_eol() -> Result<bool, WinAuditErr
     Ok(false)
 }
 
+/// Check is **Wazuh Agent** installed and configured and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_wazuh_agent_installed_and_not_eol;
+///
+/// match is_wazuh_agent_installed_and_not_eol() {
+///     Ok(installed_and_not_eol) => {
+///         if installed_and_not_eol {
+///             println!("Wazuh Agent installed or configured or not an EOL.");
+///         }else {
+///             println!("Wazuh Agent is not installed or not configured or an EOL.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("{:?}", e);
+///     }
+/// }
+/// ```
 pub fn is_wazuh_agent_installed_and_not_eol() -> Result<bool, WinAuditError> {
     let wazuh_paths = [
         r"C:\Program Files\ossec-agent",
@@ -1184,6 +2112,25 @@ pub fn is_wazuh_agent_installed_and_not_eol() -> Result<bool, WinAuditError> {
     Ok(false)
 }
 
+/// Check is **Windows Defender** antivirus and enabled and not an EOL (End Of Life).
+///
+/// # Example Usage:
+/// ```
+/// use winaudit::is_windows_defender_not_eol;
+///
+/// match is_windows_defender_not_eol() {
+///     Ok(enabled_and_not_eol) => {
+///         if enabled_and_not_eol {
+///             println!("Windows Defender Antivirus enabled and not an EOL.");
+///         }else {
+///             println!("Windows Defender Antivirus not enabled or an EOL.");
+///         }
+///     }
+///     Err(e) => {
+///         eprintln!("{:?}", e);
+///     }
+/// }
+/// ```
 pub fn is_windows_defender_not_eol() -> Result<bool, WinAuditError> {
     const WD_REG_KEY: &str = r"SOFTWARE\Microsoft\Windows Defender";
 
