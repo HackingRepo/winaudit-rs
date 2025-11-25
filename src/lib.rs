@@ -1,3 +1,4 @@
+#![allow(unused_imports)]
 #[cfg(not(target_os = "windows"))]
 compile_error!("This module only for windows os");
 
@@ -32,8 +33,6 @@ pub use hardwarechecks::{
 pub use oschecks::*;
 pub use softwarechecks::*;
 
-#[cfg(feature = "experimental")]
-pub use hardwarechecks::gpuchecks::*;
 #[cfg(feature = "experimental")]
 pub use hardwarechecks::network_adapters_checks::*;
 #[cfg(feature = "experimental")]
