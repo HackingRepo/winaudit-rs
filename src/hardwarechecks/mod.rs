@@ -658,7 +658,3 @@ pub use network_adapters_checks::*;
 pub mod ssd_checks;
 #[cfg(feature = "experimental")]
 pub use ssd_checks::*;
-#[cfg(feature = "experimental")]
-pub mod gpuchecks;
-#[cfg(feature = "experimental")]
-pub use gpuchecks::*;
